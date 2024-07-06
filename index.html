@@ -3,82 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Postcards</title>
- <style>
-     body {
-    font-family: 'Arial', sans-serif;
-    padding: 20px;
-    background: #f7f7f7;
-}
-
-.form-container {
-    max-width: 600px;
-    margin: auto;
-    background: white;
-    padding: 20px;
-    border-radius: 5px;
-}
-
-#postcard-form {
-    margin-bottom: 20px;
-}
-
-#postcard-form input,
-#postcard-form button {
-    display: block;
-    width: 100%;
-    margin-bottom: 10px;
-}
-
-#postcard-preview {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: center;
-}
-
-#postcard-preview img {
-    max-width: 100%;
-    height: auto;
-}
- </style>
+    <title>Cloud Storage</title>
 </head>
 <body>
-    <div class="form-container">
-        <form id="postcard-form">
-            <input type="file" id="image-upload" />
-            <input type="text" id="message-input" placeholder="Enter your message" />
-            <input type="text" id="name-input" placeholder="Enter your name" />
-            <input type="email" id="email-input" placeholder="Enter your email address" />
-            <button type="submit">Create Postcard</button>
-        </form>
-        <div id="postcard-preview"></div>
-    </div>
+    <h1>My Cloud Storage</h1>
+    <section id="file-upload">
+        <h2>Upload a File</h2>
+        <input type="file" id="file-input" accept="image/*,video/*">
+        <button id="upload-button">Upload</button>
+    </section>
+    <section id="file-list">
+        <h2>Uploaded Files</h2>
+        <ul id="files"></ul>
+    </section>
+    <style>
+        body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+    padding: 1rem;
+}
+
+section {
+    border: 1px solid #ccc;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+#file-upload {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#file-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.file-item img,
+.file-item video {
+    width: 100px;
+    height: auto;
+    object-fit: cover;
+    margin-right: 1rem;
+}
+
+    </style>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-    
-    // Handle form submission
-    document.getElementById('postcard-form').addEventListener('submit', function(event) {
-        event.preventDefault();
-        
-        // Retrieve file, message, name, and email from form fields
-        var imageFile = document.getElementById('image-upload').files[0];
-        var message = document.getElementById('message-input').value;
-        var name = document.getElementById('name-input').value;
-        var email = document.getElementById('email-input').value;
-        
-        // Here you would typically validate the inputs and handle the form submission, 
-        // such as uploading the image file, overlaying the message, and potentially
-        // emailing the postcard, or displaying the preview
-        console.log('Processing form submission with:', {imageFile, message, name, email});
-        
-        // For now, you can update the preview with the message (Image upload is not handled here)
-        var preview = document.getElementById('postcard-preview');
-        preview.textContent = Postcard message: ${message}, from: ${name};
-        
-        // The logic to handle the image upload and email submission goes here
-    });
-    
+        const fileInput = document.getElementById('file-input');
+const uploadButton = document.getElementById('upload-button');
+const fileList = document.getElementById('files');
+
+// Replace with your actual cloud storage API calls
+function uploadFile(file) {
+  // Simulate upload (replace with actual upload logic)
+  console.log(`Uploading file: ${file.name}`);
+  const uploadedFile = { name: file.name }; // Simulate response
+  return uploadedFile;
+}
+
+function displayFiles(files) {
+  fileList.innerHTML = '';
+  for (const file of files) {
+    const listItem = document.createElement('li');
+    listItem.classList.add('file-item');
+
+    const previewElement = file.type.startsWith('image/') ?
+      new Image() : document.createElement('video');
+    previewElement.src = URL.createObjectURL(file); // Generate temporary URL for preview
+
+    listItem.appendChild(previewElement);
+    listItem.appendChild(document.createTextNode(file.name));
+
+    fileList.appendChild(listItem);
+  }
+}
+
+uploadButton.addEventListener('click', () => {
+  const file = fileInput.files[0];
+  if (file) {
+    uploadFile(file)
+      .then(uploadedFile => {
+        console.log(`File uploaded successfully: ${uploadedFile.name}`);
+        // You'll need to handle actual URL generation on the server-side
+        // based on your cloud storage provider's logic (not possible with pure JS)
+        const fileUrl = `Replace with actual URL generation logic based on your cloud storage provider`;
+        displayFiles([uploadedFile]); // Simulate displaying uploaded file with placeholder URL
+      })
+      .catch(error => {
+        console.error('Error uploading file:', error);
+      });
+  }
 });
+
     </script>
 </body>
 </html>
